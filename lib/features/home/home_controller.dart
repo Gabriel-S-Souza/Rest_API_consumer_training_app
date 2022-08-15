@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_application_2/core/core.dart';
+import 'package:flutter_application_2/features/home/home_repository.dart';
 import 'models/models.dart';
 
 class HomeController extends ChangeNotifier {
 
-  final HttpClient _httpClient = HttpClient();
+  final HomeRepository homeRepository = HomeRepository();
 
   bool isLoading = false;
   bool isAddTaskLoading = false;
@@ -13,7 +13,7 @@ class HomeController extends ChangeNotifier {
   Future<void> readAll() async {
     isLoading = true;
     notifyListeners();
-    final tasks = await _httpClient.readAll();
+    final tasks = await homeRepository.readAll();
     if (tasks != null) {
       this.tasks = tasks;
       this.tasks = tasks.reversed.toList();
@@ -25,9 +25,9 @@ class HomeController extends ChangeNotifier {
   Future<void> create(String title) async {
     isAddTaskLoading = true;
     notifyListeners();
-    final task = await _httpClient.create(title, 'A Fazer');
+    final task = await homeRepository.create(title);
     if (task != null) {
-       final tasks = await _httpClient.readAll();
+       final tasks = await homeRepository.readAll();
       if (tasks != null) {
         this.tasks = tasks;
         this.tasks = tasks.reversed.toList();
